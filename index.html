@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a1a1a" />
+  <title>Splitrrr</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <button id="back-btn" class="icon-btn" hidden aria-label="Back">‹</button>
+    <h1 class="app-title"></h1>
+    <span class="header-spacer"></span>
+  </header>
+
+  <main id="main">
+    <section id="screen-home" class="screen">
+      <button id="new-bill-btn" class="primary-btn big">+ New bill</button>
+      <h2 class="section-title">History</h2>
+      <ul id="history-list" class="history-list"></ul>
+      <p id="history-empty" class="muted" hidden>No bills yet. Scan one to get started.</p>
+    </section>
+
+    <section id="screen-capture" class="screen" hidden>
+      <h2 class="section-title">Scan a bill</h2>
+      <label class="file-input">
+        <input type="file" id="bill-image" accept="image/*" capture="environment" />
+        <span>Choose / take photo</span>
+      </label>
+      <div id="capture-preview-wrap" hidden>
+        <img id="capture-preview" alt="Bill preview" />
+        <button id="run-ocr-btn" class="primary-btn">Proceed</button>
+      </div>
+      <div id="ocr-progress" hidden>
+        <div class="progress-bar"><div id="ocr-progress-fill"></div></div>
+        <p id="ocr-progress-label" class="muted">Reading bill…</p>
+      </div>
+      <button id="skip-ocr-btn" class="link-btn">Or enter items manually</button>
+    </section>
+
+    <section id="screen-review" class="screen" hidden>
+      <h2 class="section-title">Review items</h2>
+      <label class="field">
+        <span>Bill name (optional)</span>
+        <input type="text" id="bill-name" placeholder="e.g., Dinner at Toit" />
+      </label>
+
+      <h3 class="subsection">Items</h3>
+      <ul id="items-list" class="items-list"></ul>
+      <button id="add-item-btn" class="secondary-btn">+ Add item</button>
+
+      <h3 class="subsection">Extras</h3>
+      <div class="extras-grid">
+        <label class="field">
+          <span>Service charge</span>
+          <input type="number" id="extra-service" min="0" step="0.01" inputmode="decimal" />
+        </label>
+        <label class="field">
+          <span>Tax</span>
+          <input type="number" id="extra-tax" min="0" step="0.01" inputmode="decimal" />
+        </label>
+        <label class="field">
+          <span>Tip</span>
+          <input type="number" id="extra-tip" min="0" step="0.01" inputmode="decimal" />
+        </label>
+        <label class="field">
+          <span>Discount</span>
+          <div class="input-with-toggle">
+            <input type="number" id="extra-discount" min="0" step="0.01" inputmode="decimal" />
+            <button type="button" id="discount-mode-toggle" class="mode-toggle" aria-label="Toggle discount mode">amt</button>
+          </div>
+        </label>
+      </div>
+
+      <button id="review-next-btn" class="primary-btn">Next: participants</button>
+    </section>
+
+    <section id="screen-participants" class="screen" hidden>
+      <h2 class="section-title">Who's splitting?</h2>
+      <form id="participant-form" class="add-row">
+        <input type="text" id="participant-name" placeholder="Name" autocomplete="off" />
+        <button type="submit" class="primary-btn">Add</button>
+      </form>
+      <ul id="participants-list" class="chips-list"></ul>
+      <button id="participants-next-btn" class="primary-btn" disabled>Next: assign items</button>
+    </section>
+
+    <section id="screen-assign" class="screen" hidden>
+      <h2 class="section-title">Drag people onto items</h2>
+      <p class="muted small">Drag a name onto each item. Multiple people = split equally for that item. Leave an item empty to split it equally across everyone.</p>
+      <div id="roster" class="roster chips-list"></div>
+      <ul id="assign-items-list" class="items-list assign-items"></ul>
+      <button id="assign-next-btn" class="primary-btn">See breakdown</button>
+    </section>
+
+    <section id="screen-summary" class="screen" hidden>
+      <p id="summary-grand-total" class="grand-total"></p>
+      <h2 class="section-title">Per person</h2>
+      <div id="summary-warnings" hidden></div>
+      <ul id="summary-list" class="summary-list"></ul>
+      <div class="action-row">
+        <button id="summary-discard-btn" class="secondary-btn">Discard</button>
+        <button id="summary-save-btn" class="primary-btn">Save & finish</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal-backdrop" class="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-message">
+      <p id="modal-message" class="modal-message"></p>
+      <div class="modal-actions">
+        <button id="modal-cancel" class="secondary-btn" type="button">Cancel</button>
+        <button id="modal-confirm" class="primary-btn" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
