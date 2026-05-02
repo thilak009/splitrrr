@@ -33,9 +33,9 @@ export function renderCapture({ onParsed, onSkip }) {
     if (!currentFile) return;
     runBtn.disabled = true;
     progressWrap.hidden = false;
+    progressLabel.textContent = 'Reading bill…';
     try {
       const text = await runOcr(currentFile, (m) => {
-        if (m.status) progressLabel.textContent = m.status;
         if (typeof m.progress === 'number') {
           progressFill.style.width = Math.round(m.progress * 100) + '%';
         }
